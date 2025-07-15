@@ -35,7 +35,8 @@ These core ideas make PageSpace ideal for many types of builders:
 | 🚀 **From Contributor to Partner.** We offer a path from PR to partnership for solutions that solve real market needs. | 💰 **Clear ROI.** Reduce research time, accelerate onboarding, and make better decisions with all your context in one place. | 📈 **Real-World Data.** Analyze how teams build and interact with a hierarchical, contextual knowledge graph. |ter decisions with all your context in one place. | 📈 **Real-World Data.** Analyze how teams build and interact with a hierarchical, contextual knowledge graph. |
 
 ## Early Preview Screenshot
-<img width="1022" height="500" alt="Screenshot 2025-07-15 at 1 08 51 AM" src="https://github.com/user-attachments/assets/8c943a76-5342-43fa-bd03-e37dc99383b7" />
+<img width="1594" height="780" alt="Screenshot 2025-07-15 at 1 08 51 AM" src="https://github.com/user-attachments/assets/c4e7dfde-cc0d-482e-8768-c5e7d2447c56" />
+
 
 ---
 
