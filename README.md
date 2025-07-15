@@ -10,7 +10,7 @@ It's built for teams who believe **context is their most valuable asset**—and 
 **Our philosophy is simple: your knowledge should be a memory you can build, not a black box you can't control.**
 
 [![License](https://img.shields.io/github/license/2witstudios/pagespace.team?style=for-the-badge)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/2witstudios/pagespace.team?style=for-the-badge)](https://github.com/pagespace-network/pagespace.team/stargazers)
+[![GitHub Stars](https://img.shields.io/github/stars/2witstudios/pagespace.team?style=for-the-badge)](https://github.com/2witstudios/pagespace.team/stargazers)
 [![Discord](https://img.shields.io/discord/1394397911952920596?style=for-the-badge&logo=discord)](https://discord.gg/yxDQkTHXT5)
 
 ---
@@ -113,7 +113,7 @@ graph TB
 
 1.  **Clone the repo:**
     ```bash
-    git clone https://github.com/pagespace-network/pagespace.team.git
+    git clone https://github.com/2witstudios/pagespace.team.git
     cd pagespace.team
     ```
 2.  **Install dependencies:**
