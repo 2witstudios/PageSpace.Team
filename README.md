@@ -1,13 +1,16 @@
-# PageSpace: Your Private, AI-Powered Knowledge Engine
-> **Currently in early development — this is a scaffold, not a finished product.**  
-> We're building a local-first, AI-native knowledge base that transforms scattered files into institutional memory. Join us early, help shape the future.
+# PageSpace: The AI-First Workspace for Building Knowledge, Together
+
+> 🧪 **Currently in early development — this is a scaffold, not a finished product.**  
+> PageSpace is a local-first, AI-native workspace where you compose, remix, and automate your team’s thinking. Join us early and help shape the future of creative knowledge work.
+
 ---
 
-PageSpace is an AI-native knowledge base that transforms your scattered documents, conversations, and project files into a single, intelligent, and perpetually searchable engine.
+PageSpace is your modular workspace for working with context — not just information.  
+Instead of stitching together Slack for messaging, Notion for notes, and Google Drive for files, PageSpace gives you one AI-powered environment where **you, your team, and your tools all collaborate on the same canvas**.
 
-It's built for teams who believe **context is their most valuable asset**—and that **data control is non-negotiable**.
+Built for those who treat **work as creative structure**, not scattered files — and who believe that **AI should enhance, not obscure, your process**.
 
-**Our philosophy is simple: your knowledge should be a memory you can build, not a black box you can't control.**
+**Our philosophy is simple:** your work should be a memory you can shape, navigate, and reuse — not a silo you forget.
 
 [![License](https://img.shields.io/github/license/2witstudios/pagespace.team?style=for-the-badge)](LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/2witstudios/pagespace.team?style=for-the-badge)](https://github.com/2witstudios/pagespace.team/stargazers)
@@ -15,55 +18,55 @@ It's built for teams who believe **context is their most valuable asset**—and 
 
 ---
 
-## Why PageSpace: Context as Architecture
+## 🧱 Core Model: A Composable Workspace for Thinking in Context
 
-PageSpace isn't just a knowledge base — it's a philosophy:  
-**Your institutional memory should be contextual, structured, and fully in your control.**
+PageSpace isn’t just a knowledge base — it’s a structured thinking environment, where **documents, conversations, and AI share the same shape**.
 
 We believe:
 
-- 🧠 **Context is memory.** A note inside a folder means something different than a note alone. PageSpace models this explicitly: everything lives in a structured, position-aware tree.
-- 🗂️ **Structure encodes meaning.** Hierarchy isn’t just organization — it drives permissions, relevance, and even how AI behaves. Moving a page is a semantic act.
-- 📄 **Pages are the universal primitive.** Documents, folders, chats, databases, and AI live inside a single recursive model. You can nest anything inside anything — and AI can reason across it all.
+- 🧠 **Context is the creative layer.** Meaning emerges from structure. A note in a folder is different than a note alone — and PageSpace treats that as real data.
+- 🗂️ **Structure encodes logic.** Move a page, change the meaning. Our AI respects hierarchy, tags, and position — and answers differently based on what’s near what.
+- 📄 **Everything is a Page.** Docs, chats, spreadsheets, task lists, AIs — all nestable, linked, and permissioned. You don’t move between tools; the tools move with you.
 
-These core ideas make PageSpace ideal for many types of builders:
+---
 
-| For the **Open Source Developer** | For the **Founder & Business** | For the **AI Researcher** |
+## 🔥 Who It's For
+
+| For the **Open Source Hacker** | For the **Productive Team** | For the **AI Researcher** |
 | :--- | :--- | :--- |
-| 👩‍💻 **Build What You Need.** Our mindset is "scratch your own itch." PageSpace is a framework for solving your own workflow problems. | 🏢 **Own Your Data.** Deploy on your own hardware, even air-gapped. Your knowledge is never a liability. | 🔬 **A Unique Research Sandbox.** Study retrieval, context, and user interaction on a real-world, local-first AI stack. |
-| 🔧 **A Modern, Hackable Stack.** Built with Next.js 15, TypeScript, and Docker. No legacy code, just clean patterns. | 🧠 **Create Institutional Memory.** Stop losing context when team members leave. Build a knowledge base that grows with you. | 🧪 **Experiment-Ready Codebase.** Customize retrieval, memory, and evaluation logic for practical research workflows. |
-| 🚀 **From Contributor to Partner.** We offer a path from PR to partnership for solutions that solve real market needs. | 💰 **Clear ROI.** Reduce research time, accelerate onboarding, and make better decisions with all your context in one place. | 📈 **Real-World Data.** Analyze how teams build and interact with a hierarchical, contextual knowledge graph. |ter decisions with all your context in one place. | 📈 **Real-World Data.** Analyze how teams build and interact with a hierarchical, contextual knowledge graph. |
-
-## Early Preview Screenshot
-<img width="1594" height="780" alt="Screenshot 2025-07-15 at 1 08 51 AM" src="https://github.com/user-attachments/assets/c4e7dfde-cc0d-482e-8768-c5e7d2447c56" />
-
+| 🧩 **Remix Your Workflow.** Use PageSpace like a programmable interface — and ship workflows that live inside your repo. | 💼 **Work Like a Team, Not a Toolset.** No more Notion + Slack + Drive + AI — one workspace, one context model. | 🔬 **Think With Context.** Study real-world, hierarchical, permissioned retrieval with traceable output. |
+| 🧠 **AI That Respects You.** It talks like a teammate, not a chatbot. Scoped, embedded, and structured by context. | 🛠 **On-Prem, If You Need It.** Run air-gapped, containerized, or hybrid. Your infrastructure, your rules. | 🧪 **Instrument Everything.** Perfect for building, evaluating, or experimenting with local-first AI loops. |
+| 🪄 **From PR to Plugin.** Contribute features that plug into the workspace model. Everything is extensible. | 🧱 **Build Institutional Memory.** Every meeting, draft, or idea stays in context — no more digging. | 📈 **Get Real Signals.** Observe how users build memory — not just prompt history. |
 
 ---
 
-## Key Features: The Building Blocks of Your Knowledge Engine
-
-PageSpace is built on a set of powerful, interconnected features that bring your knowledge to life.
-
-#### 🧠 Contextual AI Chat
-- **Page AI:** Lives inside your documents, inheriting their context and permissions for deep, focused conversations.
-- **Assistant AI:** Roams across your entire knowledge base for broad, cross-project inquiries.
-- **Multi-Document Analysis:** Chat with multiple documents at once to compare, contrast, and synthesize information.
-
-#### 📁 Universal Content System
-- **Nest Anything:** PDFs inside project folders, AI chats inside documents, emails inside client briefs. It's a fully recursive system.
-- **@Mention Anything:** Use @mentions to link any kind of page, insert context, or create semantic maps of your data.
-- **Cross-Format Intelligence:** The AI understands the relationships between different file types, turning them into unified context.
-
-#### 🔒 Local-First Security & Control
-- **On-Premises Deployment:** Run PageSpace on your own servers with Docker. Complete data sovereignty.
-- **Air-Gapped Capability:** Operate in secure environments without sacrificing AI capabilities.
-- **Granular Permissions:** Role-based access control that inherits through the document hierarchy.
+## 🖼️ Preview (Early Build)
+<img width="1022" height="500" alt="Screenshot 2025-07-15 at 1 08 51 AM" src="https://github.com/user-attachments/assets/74d74b52-eec2-44c8-b9fa-6e03ebb1e802" />
 
 ---
 
-## 🏛️ Architecture: Built for Control and Scale
+## 🧠 Key Features (As They Ship)
 
-PageSpace uses a modern, transparent, and scalable architecture designed for local-first operation and easy extension.
+PageSpace is a scaffold-first project: what’s here is foundational, but designed for modular power.
+
+### 🎛️ Contextual AI Agents
+- **Page AI:** Lives *inside* your documents. Scoped by position, permission, and tags.
+- **Assistant AI:** Floats across your whole workspace. Great for discovery, synthesis, or search.
+- **Multi-Page Thinking:** Ask questions that span multiple pieces of content, with traceable sources.
+
+### 🧾 Nestable Workspace Graph
+- **Pages-as-Primitives:** Every object is a page — documents, folders, chats, lists, or AI.
+- **Recursive Composition:** You can put a spreadsheet in a note, inside a folder, with an embedded AI.
+- **Smart Mentions:** Link anything to anything. Mention pages, filter views, or create semantic maps.
+
+### 🔐 Local-First, AI-Native
+- **Fully Containerized:** One `docker-compose up` for a local-first instance with real AI capabilities.
+- **Secure by Design:** RBAC, permission inheritance, and air-gapped deploys.
+- **Hackable Core:** Built in Next.js 15, Drizzle ORM, pgvector, and Socket.IO — no mystery meat.
+
+---
+
+## 🧬 Architecture Overview
 
 ```mermaid
 graph TB
@@ -73,30 +76,29 @@ graph TB
 
     subgraph "PageSpace Local Deployment (Docker)"
         subgraph "Application Layer"
-            WEB["`🌐 **Next.js 15 Web App**<br/>UI, API Routes, Auth`"]
-            RT["`⚡ **Realtime Server**<br/>Socket.IO for Live Updates`"]
-        end
-        
-        subgraph "Shared Logic (Packages)"
-            LIB["`📚 **@pagespace/lib**<br/>Shared Utilities, Permissions, Types`"]
-            DB_PKG["`🗄️ **@pagespace/db**<br/>Drizzle ORM, Schema, Client`"]
+            WEB["🌐 Next.js 15 Web App\nUI, API Routes, Auth"]
+            RT["⚡ Realtime Server\nSocket.IO for Live Updates"]
         end
 
-        subgraph "Data & AI Services"
-            PG[(**PostgreSQL**<br/>+ pgvector)]
-            AI[AI Engine - Pluggable LLM Backend]
+        subgraph "Shared Packages"
+            LIB["📚 @pagespace/lib\nUtilities, Permissions, Types"]
+            DB["🗄️ @pagespace/db\nDrizzle ORM, Schema, Client"]
+        end
+
+        subgraph "Data + AI Services"
+            PG[(PostgreSQL + pgvector)]
+            AI["🤖 AI Engine\nPluggable, Local or Cloud"]
         end
     end
 
-    %% Interactions
     USER --> WEB
     WEB <--> RT
     WEB --> LIB
-    WEB --> DB_PKG
+    WEB --> DB
     WEB --> AI
     RT --> LIB
-    RT --> DB_PKG
-    DB_PKG --> PG
+    RT --> DB
+    DB --> PG
 ```
 
 - **Frontend:** Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui, Tiptap
