@@ -9,8 +9,8 @@ It's built for teams who believe **context is their most valuable asset**—and 
 
 **Our philosophy is simple: your knowledge should be a memory you can build, not a black box you can't control.**
 
-[![License](https://img.shields.io/github/license/pagespace-network/pagespace.team?style=for-the-badge)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/pagespace-network/pagespace.team?style=for-the-badge)](https://github.com/pagespace-network/pagespace.team/stargazers)
+[![License](https://img.shields.io/github/license/2witstudios/pagespace.team?style=for-the-badge)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/2witstudios/pagespace.team?style=for-the-badge)](https://github.com/pagespace-network/pagespace.team/stargazers)
 [![Discord](https://img.shields.io/discord/1394397911952920596?style=for-the-badge&logo=discord)](https://discord.gg/yxDQkTHXT5)
 
 ---
@@ -187,8 +187,8 @@ gantt
 
 ## Community & Support
 
-- **[GitHub Discussions](https://github.com/pagespace-network/pagespace.team/discussions):** Ask questions and share ideas.
-- **[GitHub Issues](https://github.com/pagespace-network/pagespace.team/issues):** Report bugs and request features.
+- **[GitHub Discussions](https://github.com/2witstudios/pagespace.team/discussions):** Ask questions and share ideas.
+- **[GitHub Issues](https://github.com/2witstudios/pagespace.team/issues):** Report bugs and request features.
 - **[Documentation](./docs/1.0-overview/1.1-table-of-contents.md):** Dive deep into the architecture and guides.
 
 ---
