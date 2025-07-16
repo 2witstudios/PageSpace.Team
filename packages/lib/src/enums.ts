@@ -4,6 +4,7 @@ export enum PageType {
   DATABASE = 'DATABASE',
   CHANNEL = 'CHANNEL',
   AI_CHAT = 'AI_CHAT',
+  NOTE = 'NOTE',
 }
 
 export enum PermissionAction {

@@ -22,6 +22,7 @@ The rendering logic is handled in the `PageContent` component, found in [`apps/w
 -   `DATABASE`: A deprecated page type.
 -   `CHANNEL`: For chat-like communication channels.
 -   `AI_CHAT`: A view for interacting with an AI chat.
+-   `NOTE`: Renders a line-addressable, AI-native text editor.
 
 ## 2. Steps to Add a New Page Type
 
@@ -61,16 +62,16 @@ export enum PageType {
   DATABASE = 'DATABASE',
   CHANNEL = 'CHANNEL',
   AI_CHAT = 'AI_CHAT',
-  KANBAN = 'KANBAN', // Add your new type here
+  NOTE = 'NOTE', // Add your new type here
 }
 ```
 
 ### Step 3: Update the Database Schema
 
-Add the new `PageType` to the `pageType` enum in [`packages/db/src/schema/enums.ts`](packages/db/src/schema/enums.ts).
+Add the new `PageType` to the `pageType` enum in [`packages/db/src/schema/core.ts`](packages/db/src/schema/core.ts).
 
 ```typescript
-// packages/db/src/schema/enums.ts
+// packages/db/src/schema/core.ts
 
 export const pageType = pgEnum('page_type', [
     'FOLDER',
@@ -78,7 +79,7 @@ export const pageType = pgEnum('page_type', [
     'DATABASE',
     'CHANNEL',
     'AI_CHAT',
-    'KANBAN', // Add your new type here
+    'NOTE', // Add your new type here
 ]);
 ```
 
@@ -110,8 +111,8 @@ const PageContent = ({ pageId }: { pageId: string | null }) => {
       return <ChannelView key={page.id} page={page} />;
     case PageType.DATABASE:
         return <div className="p-4">This page type is deprecated.</div>;
-    case PageType.KANBAN: // Add new case
-        return <KanbanView key={page.id} page={page} />;
+    case PageType.NOTE: // Add new case
+        return <NoteView key={page.id} page={page} />;
     default:
       return <div className="p-4">This page type is not supported.</div>;
   }

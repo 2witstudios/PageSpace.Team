@@ -2,7 +2,7 @@ import { pgTable, text, timestamp, jsonb, real, boolean, pgEnum, primaryKey, ind
 import { relations } from 'drizzle-orm';
 import { users } from './auth';
 import { createId } from '@paralleldrive/cuid2';
-export const pageType = pgEnum('PageType', ['FOLDER', 'DOCUMENT', 'DATABASE', 'CHANNEL', 'AI_CHAT']);
+export const pageType = pgEnum('PageType', ['FOLDER', 'DOCUMENT', 'DATABASE', 'CHANNEL', 'AI_CHAT', 'NOTE']);
 
 export const drives = pgTable('drives', {
   id: text('id').primaryKey().$defaultFn(() => createId()),

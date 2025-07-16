@@ -54,6 +54,8 @@ export default function CreatePageDialog({ parentId, isOpen, setIsOpen, onPageCr
         content = generateInitialDatabaseContent();
       } else if (type === 'CHANNEL' || type === 'AI_CHAT') {
         content = { messages: [] };
+      } else if (type === 'NOTE') {
+        content = {};
       }
 
       const response = await fetch('/api/pages', {
@@ -137,6 +139,7 @@ export default function CreatePageDialog({ parentId, isOpen, setIsOpen, onPageCr
                   <SelectItem value="FOLDER">Folder</SelectItem>
                   <SelectItem value="CHANNEL">Channel</SelectItem>
                   <SelectItem value="AI_CHAT">AI Chat</SelectItem>
+                  <SelectItem value="NOTE">Note</SelectItem>
                 </SelectContent>
               </Select>
             </div>

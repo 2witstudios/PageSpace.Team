@@ -2,16 +2,16 @@
 
 ### GET /api/mentions/search
 
-**Purpose:** Searches for pages, users, and AI conversations to be used in mentions.
+**Purpose:** Searches for users and pages to be used in mentions.
 **Auth Required:** Yes
 **Request Schema:**
 - q: string (query parameter - search query)
-- driveId: string (query parameter)
-- types: string (comma-separated list of 'page', 'user', 'ai-page', 'ai-assistant', 'channel')
-**Response Schema:** Array of mention suggestion objects.
+**Response Schema:**
+- users: Array of user objects with id and name
+- pages: Array of page objects with id and title
 **Status Codes:** 200 (OK), 400 (Bad Request), 401 (Unauthorized), 500 (Internal Server Error)
 **Next.js 15 Handler:** async function returning Response/NextResponse
-**Last Updated:** 2025-07-13
+**Last Updated:** 2025-07-15
 
 ### POST /api/pages
 

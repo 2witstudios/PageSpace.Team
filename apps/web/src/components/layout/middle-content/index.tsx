@@ -16,6 +16,7 @@ import ChannelView from './page-views/ai-page/ChannelView';
 import { CustomScrollArea } from '@/components/ui/custom-scroll-area';
 import { PageType } from '@pagespace/lib';
 import AiSettingsView from './page-views/settings/AiSettingsView';
+import NoteView from './page-views/note/NoteView';
 
 function DriveGrid() {
   const { drives, fetchDrives, isLoading } = useDriveStore();
@@ -88,6 +89,8 @@ const PageContent = ({ pageId }: { pageId: string | null }) => {
       return <ChannelView key={page.id} page={page} />;
     case PageType.DATABASE:
         return <div className="p-4">This page type is deprecated.</div>;
+    case PageType.NOTE:
+        return <NoteView key={page.id} />;
     default:
       return <div className="p-4">This page type is not supported.</div>;
   }
