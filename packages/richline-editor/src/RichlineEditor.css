@@ -1,0 +1,24 @@
+.richline-editor {
+  border: 1px solid #ddd;
+  background-color: #fff;
+  color: #000;
+  width: 8.5in; /* Standard paper width */
+  min-height: 11in; /* Standard paper height */
+  padding: 1in;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transform-origin: top left;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12pt;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.richline-line {
+  outline: none;
+  min-height: 1.5em; /* Ensure line has height even when empty */
+  color: inherit;
+}
+
+.richline-editor:focus-within {
+  border-color: #007bff;
+}

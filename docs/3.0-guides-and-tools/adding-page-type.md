@@ -19,10 +19,10 @@ The rendering logic is handled in the `PageContent` component, found in [`apps/w
 
 -   `FOLDER`: Displays content as a folder.
 -   `DOCUMENT`: Renders a rich-text editor for documents.
+-   `NOTE`: A line-based editor using Rust/WASM for paper-like note taking.
 -   `DATABASE`: A deprecated page type.
 -   `CHANNEL`: For chat-like communication channels.
 -   `AI_CHAT`: A view for interacting with an AI chat.
--   `NOTE`: Renders a line-addressable, AI-native text editor.
 
 ## 2. Steps to Add a New Page Type
 
@@ -59,10 +59,11 @@ Next, add your new page type to the `PageType` enum in [`packages/lib/src/enums.
 export enum PageType {
   FOLDER = 'FOLDER',
   DOCUMENT = 'DOCUMENT',
+  NOTE = 'NOTE',
   DATABASE = 'DATABASE',
   CHANNEL = 'CHANNEL',
   AI_CHAT = 'AI_CHAT',
-  NOTE = 'NOTE', // Add your new type here
+  KANBAN = 'KANBAN', // Add your new type here
 }
 ```
 
@@ -73,13 +74,14 @@ Add the new `PageType` to the `pageType` enum in [`packages/db/src/schema/core.t
 ```typescript
 // packages/db/src/schema/core.ts
 
-export const pageType = pgEnum('page_type', [
+export const pageType = pgEnum('PageType', [
     'FOLDER',
     'DOCUMENT',
+    'NOTE',
     'DATABASE',
     'CHANNEL',
     'AI_CHAT',
-    'NOTE', // Add your new type here
+    'KANBAN', // Add your new type here
 ]);
 ```
 
@@ -105,18 +107,47 @@ const PageContent = ({ pageId }: { pageId: string | null }) => {
       return <Editor key={page.id} page={page} />;
     case PageType.FOLDER:
       return <FolderView key={page.id} page={page} />;
+    case PageType.NOTE:
+      return <NoteView key={page.id} page={page} />;
     case PageType.AI_CHAT:
       return <AiChatView key={page.id} page={page} />;
     case PageType.CHANNEL:
       return <ChannelView key={page.id} page={page} />;
     case PageType.DATABASE:
         return <div className="p-4">This page type is deprecated.</div>;
-    case PageType.NOTE: // Add new case
-        return <NoteView key={page.id} page={page} />;
+    case PageType.KANBAN: // Add new case
+        return <KanbanView key={page.id} page={page} />;
     default:
       return <div className="p-4">This page type is not supported.</div>;
   }
 };
+```
+
+### Step 5: Add to Create Page Dialog
+
+Add your new page type to the dropdown in the create page dialog:
+
+```tsx
+// apps/web/src/components/layout/left-sidebar/CreatePageDialog.tsx
+
+<SelectContent>
+  <SelectItem value="DOCUMENT">Document</SelectItem>
+  <SelectItem value="FOLDER">Folder</SelectItem>
+  <SelectItem value="NOTE">Note</SelectItem>
+  <SelectItem value="CHANNEL">Channel</SelectItem>
+  <SelectItem value="AI_CHAT">AI Chat</SelectItem>
+  <SelectItem value="KANBAN">Kanban</SelectItem> {/* Add your new type */}
+</SelectContent>
+```
+
+And handle initial content creation:
+
+```tsx
+} else if (type === 'NOTE') {
+  content = [''];
+} else if (type === 'KANBAN') {
+  content = { boards: [], cards: [] }; // Your initial content
+}
 ```
 
 By following these steps, you can successfully integrate a new page type into the application.

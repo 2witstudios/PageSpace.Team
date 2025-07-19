@@ -40,7 +40,7 @@ export default function CreatePageDialog({ parentId, isOpen, setIsOpen, onPageCr
     }
     setIsSubmitting(true);
     try {
-      let content: Record<string, unknown> = {};
+      let content: Record<string, unknown> | string[] = {};
       if (type === 'DOCUMENT') {
         content = {
           type: 'doc',
@@ -52,10 +52,10 @@ export default function CreatePageDialog({ parentId, isOpen, setIsOpen, onPageCr
         };
       } else if (type === 'DATABASE') {
         content = generateInitialDatabaseContent();
+      } else if (type === 'NOTE') {
+        content = [''];
       } else if (type === 'CHANNEL' || type === 'AI_CHAT') {
         content = { messages: [] };
-      } else if (type === 'NOTE') {
-        content = {};
       }
 
       const response = await fetch('/api/pages', {
@@ -137,9 +137,9 @@ export default function CreatePageDialog({ parentId, isOpen, setIsOpen, onPageCr
                 <SelectContent>
                   <SelectItem value="DOCUMENT">Document</SelectItem>
                   <SelectItem value="FOLDER">Folder</SelectItem>
+                  <SelectItem value="NOTE">Note</SelectItem>
                   <SelectItem value="CHANNEL">Channel</SelectItem>
                   <SelectItem value="AI_CHAT">AI Chat</SelectItem>
-                  <SelectItem value="NOTE">Note</SelectItem>
                 </SelectContent>
               </Select>
             </div>

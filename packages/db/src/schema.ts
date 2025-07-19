@@ -3,14 +3,12 @@ export * from './schema/core';
 export * from './schema/permissions';
 export * from './schema/chat';
 export * from './schema/ai';
-export * from './schema/ai-audit';
 
 import * as auth from './schema/auth';
 import * as core from './schema/core';
 import * as permissions from './schema/permissions';
 import * as chat from './schema/chat';
 import * as ai from './schema/ai';
-import * as aiAudit from './schema/ai-audit';
 
 export const schema = {
   ...auth,
@@ -18,5 +16,4 @@ export const schema = {
   ...permissions,
   ...chat,
   ...ai,
-  ...aiAudit,
 };

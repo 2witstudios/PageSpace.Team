@@ -33,15 +33,8 @@
     {
       "idx": 4,
       "version": "7",
-      "when": 1752637878751,
-      "tag": "0004_acoustic_eternity",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1752643520178,
-      "tag": "0005_greedy_devos",
+      "when": 1752886434364,
+      "tag": "0004_salty_boomerang",
       "breakpoints": true
     }
   ]

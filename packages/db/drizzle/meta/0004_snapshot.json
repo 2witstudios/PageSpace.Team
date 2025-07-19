@@ -1,5 +1,5 @@
 {
-  "id": "418372d3-0053-4d7e-9bd4-5ee385404bd4",
+  "id": "86523fd1-0710-4e19-b254-65ab96a6c1e4",
   "prevId": "259fbdfa-2e56-414d-8ada-23dd7881bbe0",
   "version": "7",
   "dialect": "postgresql",
@@ -1644,61 +1644,6 @@
           ]
         }
       }
-    },
-    "public.ai_audit_log": {
-      "name": "ai_audit_log",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "action": {
-          "name": "action",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "details": {
-          "name": "details",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "ai_audit_log_user_id_users_id_fk": {
-          "name": "ai_audit_log_user_id_users_id_fk",
-          "tableFrom": "ai_audit_log",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
     }
   },
   "enums": {
@@ -1710,7 +1655,8 @@
         "DOCUMENT",
         "DATABASE",
         "CHANNEL",
-        "AI_CHAT"
+        "AI_CHAT",
+        "NOTE"
       ]
     },
     "public.PermissionAction": {

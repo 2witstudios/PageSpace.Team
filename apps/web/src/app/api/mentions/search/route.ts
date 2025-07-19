@@ -1,146 +1,171 @@
 import { NextResponse } from 'next/server';
-// TODO: Add database imports when available
-// import { db } from 'packages/db/src/index';
-// import { users } from 'packages/db/src/schema/auth';
-// import { pages } from 'packages/db/src/schema';
-// import { ilike, or, and, eq, desc } from 'drizzle-orm';
+import { decodeToken, getUserAccessLevel } from '@pagespace/lib';
+import { parse } from 'cookie';
+import { pages, users, assistantConversations, db, and, eq, ilike, or } from '@pagespace/db';
+import { MentionSuggestion, MentionType } from '@/types/mentions';
 
 export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    // documentId is reserved for future use when implementing document-specific mention filtering
-    // const documentId = searchParams.get('documentId');
+  const cookieHeader = request.headers.get('cookie');
+  const cookies = parse(cookieHeader || '');
+  const accessToken = cookies.accessToken;
 
-    if (!query) {
-      return NextResponse.json({ error: 'Query is required' }, { status: 400 });
-    }
+  if (!accessToken) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
 
-    let filteredUsers: { id: string; name: string }[] = [];
-    let filteredPages: { id: string; title: string }[] = [];
+  const decoded = await decodeToken(accessToken);
+  if (!decoded) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+  const userId = decoded.userId;
 
-    try {
-      // TODO: Implement real database search when drizzle-orm is available
-      // For now, fall through to mock data
-      throw new Error('Database integration pending');
-
-    } catch (dbError) {
-      console.error('Database error in mention search:', dbError);
-      
-      // Fallback to enhanced mock data for development
-      const mockUsers = [
-        { id: '1', name: 'John Doe' },
-        { id: '2', name: 'Jane Doe' },
-        { id: '3', name: 'Bob Smith' },
-        { id: '4', name: 'Alice Johnson' },
-        { id: '5', name: 'Charlie Brown' },
-      ];
-
-      const mockPages = [
-        { id: '1', title: 'Project Plan' },
-        { id: '2', title: 'Meeting Notes' },
-        { id: '3', title: 'Technical Documentation' },
-        { id: '4', title: 'Sprint Planning' },
-        { id: '5', title: 'Design System' },
-      ];
-
-      filteredUsers = mockUsers.filter((user) =>
-        user.name.toLowerCase().includes(query.toLowerCase())
-      );
-
-      filteredPages = mockPages.filter((page) =>
-        page.title.toLowerCase().includes(query.toLowerCase())
-      );
-    }
-
-    // Apply ranking based on search strategy
-    const rankedUsers = filteredUsers.map(user => ({
-      ...user,
-      score: calculateRelevanceScore(user.name, query),
-    })).sort((a, b) => b.score - a.score);
-
-    const rankedPages = filteredPages.map(page => ({
-      id: page.id,
-      title: page.title,
-      score: calculateRelevanceScore(page.title, query),
-    })).sort((a, b) => b.score - a.score);
-
-    return NextResponse.json({
-      users: rankedUsers.slice(0, Math.ceil(limit / 2)),
-      pages: rankedPages.slice(0, Math.ceil(limit / 2)),
-      query,
-      total: rankedUsers.length + rankedPages.length,
-    });
-
-  } catch (error) {
-    console.error('Error in mention search route:', error);
+  const { searchParams } = new URL(request.url);
+  const query = searchParams.get('q') || '';
+  const driveId = searchParams.get('driveId');
+  const typesParam = searchParams.get('types'); // Comma-separated types
+  
+  if (!driveId) {
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: 'Missing driveId parameter' },
+      { status: 400 }
     );
   }
-}
 
-/**
- * Calculate relevance score for search ranking
- */
-function calculateRelevanceScore(text: string, query: string): number {
-  const textLower = text.toLowerCase();
-  const queryLower = query.toLowerCase();
-  
-  // Exact match gets highest score
-  if (textLower === queryLower) return 100;
-  
-  // Starts with query gets high score
-  if (textLower.startsWith(queryLower)) return 80;
-  
-  // Contains query as whole word gets medium score
-  const wordBoundaryRegex = new RegExp(`\\b${queryLower}\\b`, 'i');
-  if (wordBoundaryRegex.test(textLower)) return 60;
-  
-  // Contains query gets lower score
-  if (textLower.includes(queryLower)) return 40;
-  
-  // Character-based similarity for fuzzy matching
-  const similarity = calculateStringSimilarity(textLower, queryLower);
-  return Math.round(similarity * 30);
-}
+  // Parse requested mention types, default to all types
+  const requestedTypes = typesParam 
+    ? typesParam.split(',') as MentionType[]
+    : ['page', 'user', 'ai-page', 'ai-assistant', 'channel'];
 
-/**
- * Calculate string similarity using Levenshtein distance
- */
-function calculateStringSimilarity(str1: string, str2: string): number {
-  const matrix = [];
-  const len1 = str1.length;
-  const len2 = str2.length;
+  try {
+    const suggestions: MentionSuggestion[] = [];
 
-  if (len1 === 0) return len2 === 0 ? 1 : 0;
-  if (len2 === 0) return 0;
+    // Search pages (including ai-page and channels)
+    if (requestedTypes.some(type => ['page', 'ai-page', 'channel'].includes(type))) {
+      const pageResults = await db.select({
+        id: pages.id,
+        title: pages.title,
+        type: pages.type,
+      })
+      .from(pages)
+      .where(
+        and(
+          eq(pages.driveId, driveId),
+          query ? ilike(pages.title, `%${query}%`) : undefined,
+          eq(pages.isTrashed, false)
+        )
+      )
+      .limit(10);
 
-  // Initialize matrix
-  for (let i = 0; i <= len2; i++) {
-    matrix[i] = [i];
-  }
-  for (let j = 0; j <= len1; j++) {
-    matrix[0][j] = j;
-  }
+      // Filter by permissions and requested types
+      for (const page of pageResults) {
+        const accessLevel = await getUserAccessLevel(userId, page.id);
+        if (!accessLevel) continue;
 
-  // Calculate distances
-  for (let i = 1; i <= len2; i++) {
-    for (let j = 1; j <= len1; j++) {
-      if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
-        matrix[i][j] = matrix[i - 1][j - 1];
-      } else {
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j - 1] + 1, // substitution
-          matrix[i][j - 1] + 1,     // insertion
-          matrix[i - 1][j] + 1      // deletion
-        );
+        let mentionType: MentionType;
+        if (page.type === 'AI_CHAT' && requestedTypes.includes('ai-page')) {
+          mentionType = 'ai-page';
+        } else if (page.type === 'CHANNEL' && requestedTypes.includes('channel')) {
+          mentionType = 'channel';
+        } else if (['DOCUMENT', 'FOLDER', 'DATABASE'].includes(page.type) && requestedTypes.includes('page')) {
+          mentionType = 'page';
+        } else {
+          continue; // Skip if type not requested
+        }
+
+        suggestions.push({
+          id: page.id,
+          label: page.title,
+          type: mentionType,
+          data: {
+            pageType: page.type as 'DOCUMENT' | 'FOLDER' | 'DATABASE' | 'CHANNEL' | 'AI_CHAT',
+            driveId: driveId,
+          },
+          description: `${page.type.toLowerCase()} in drive`,
+        });
       }
     }
-  }
 
-  const maxLength = Math.max(len1, len2);
-  return (maxLength - matrix[len2][len1]) / maxLength;
+    // Search users (if user mentions are requested)
+    if (requestedTypes.includes('user')) {
+      const userResults = await db.select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        image: users.image,
+      })
+      .from(users)
+      .where(
+        query ? or(
+          ilike(users.name, `%${query}%`),
+          ilike(users.email, `%${query}%`)
+        ) : undefined
+      )
+      .limit(5);
+
+      for (const user of userResults) {
+        suggestions.push({
+          id: user.id,
+          label: user.name || user.email,
+          type: 'user',
+          data: {
+            email: user.email,
+            avatar: user.image || undefined,
+          },
+          description: user.email,
+        });
+      }
+    }
+
+    // Search assistant conversations (if ai-assistant mentions are requested)
+    if (requestedTypes.includes('ai-assistant')) {
+      const conversationResults = await db.select({
+        id: assistantConversations.id,
+        title: assistantConversations.title,
+        driveId: assistantConversations.driveId,
+        createdAt: assistantConversations.createdAt,
+        updatedAt: assistantConversations.updatedAt,
+      })
+      .from(assistantConversations)
+      .where(
+        and(
+          eq(assistantConversations.driveId, driveId),
+          eq(assistantConversations.userId, userId), // Only show user's own conversations
+          query ? ilike(assistantConversations.title, `%${query}%`) : undefined
+        )
+      )
+      .limit(5);
+
+      for (const conversation of conversationResults) {
+        suggestions.push({
+          id: conversation.id,
+          label: conversation.title,
+          type: 'ai-assistant',
+          data: {
+            conversationId: conversation.id,
+            title: conversation.title,
+            driveId: conversation.driveId,
+            messageCount: 0, // Could be calculated if needed
+            lastActivity: conversation.updatedAt,
+          },
+          description: 'Assistant conversation',
+        });
+      }
+    }
+
+    // Sort suggestions by relevance (exact matches first, then alphabetical)
+    suggestions.sort((a, b) => {
+      const aExact = a.label.toLowerCase() === query.toLowerCase();
+      const bExact = b.label.toLowerCase() === query.toLowerCase();
+      
+      if (aExact && !bExact) return -1;
+      if (!aExact && bExact) return 1;
+      
+      return a.label.localeCompare(b.label);
+    });
+
+    return NextResponse.json(suggestions.slice(0, 10));
+  } catch (error) {
+    console.error('[MENTIONS_SEARCH_GET]', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
+  }
 }

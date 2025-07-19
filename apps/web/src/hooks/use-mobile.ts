@@ -1,19 +1,26 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 
-export const useMobile = (query: string = '(max-width: 768px)') => {
+export function useMobile() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia(query);
-    const handleResize = () => setIsMobile(mediaQuery.matches);
+    const checkDevice = () => {
+      setIsMobile(window.innerWidth < 768); // 768px is a common breakpoint for md
+    };
 
-    handleResize(); // Set initial value
-    mediaQuery.addEventListener('change', handleResize);
+    // Check on initial mount
+    checkDevice();
 
-    return () => mediaQuery.removeEventListener('change', handleResize);
-  }, [query]);
+    // Add event listener for window resize
+    window.addEventListener('resize', checkDevice);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', checkDevice);
+    };
+  }, []);
 
   return isMobile;
-};
-
-export default useMobile;
+}
