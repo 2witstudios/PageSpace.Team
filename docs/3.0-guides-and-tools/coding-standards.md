@@ -32,7 +32,7 @@ const message = {
 // ✅ CORRECT - For rich text content
 const message = {
   parts: [
-    { type: 'rich-text', content: tiptapJsonContent }
+    { type: 'rich-text', content: richlineContent }
   ]
 };
 ```
@@ -50,18 +50,12 @@ const accessLevel = await getUserAccessLevel(userId, pageId);
 const canEdit = canUserEditPage(accessLevel);
 ```
 
-#### 3. Tiptap Content Usage
-*Why: Directly rendering Tiptap's HTML with `dangerouslySetInnerHTML` can expose the application to cross-site scripting (XSS) attacks. Using the `TiptapRenderer` component or converting the content to message parts ensures that the content is properly sanitized and rendered safely. For more information, see the [Tiptap integration guide](docs/07_integrations/12_tiptap.md).*
+#### 3. Richline Content Usage
+*Why: Directly rendering user-generated content can be unsafe. Always ensure that content is properly sanitized before rendering.*
 ```typescript
-// ❌ WRONG - Don't use Tiptap content directly
-return <div dangerouslySetInnerHTML={{ __html: tiptapContent }} />;
-
 // ✅ CORRECT - Wrap in rich-text message part
-const parts = convertToMessageParts(tiptapContent, true);
+const parts = convertToMessageParts(richlineContent, true);
 return renderMessageParts(parts);
-
-// ✅ CORRECT - Use TiptapRenderer component
-return <TiptapRenderer content={tiptapContent} />;
 ```
 
 #### 4. Database Access Patterns

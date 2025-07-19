@@ -127,65 +127,6 @@
 }
 
 @layer components {
-  /* High-specificity rule for message content to override Tailwind prose styles */
-  .message-content .ProseMirror > p,
-  .message-content .ProseMirror p {
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1.2 !important;
-  }
-}
-.ProseMirror p {
-  @apply my-0;
-}
-.ProseMirror {
-  @apply p-6 min-h-full;
-}
-
-.ProseMirror:focus {
-  @apply outline-none;
-}
-
-.ProseMirror h1,
-.ProseMirror h2,
-.ProseMirror h3,
-.ProseMirror h4,
-.ProseMirror h5,
-.ProseMirror h6 {
-  @apply font-bold;
-}
-
-.ProseMirror h1 {
-  @apply text-4xl mb-6;
-}
-
-.ProseMirror h2 {
-  @apply text-3xl mb-5;
-}
-
-.ProseMirror h3 {
-  @apply text-2xl mb-4;
-}
-
-.ProseMirror p {
-  @apply mb-4 leading-relaxed;
-}
-
-.ProseMirror ul,
-.ProseMirror ol {
-  @apply pl-6 mb-4;
-}
-
-.ProseMirror ul {
-  @apply list-disc;
-}
-
-.ProseMirror ol {
-  @apply list-decimal;
-}
-
-.ProseMirror li > p {
-  @apply mb-2;
 }
 
 /* Enhanced Mention Pill Styles */

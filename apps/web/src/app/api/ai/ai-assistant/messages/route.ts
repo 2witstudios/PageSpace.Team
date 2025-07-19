@@ -18,7 +18,7 @@ const postSchema = z.object({
     z.object({
       id: z.string().optional(),
       role: z.enum(['user', 'assistant']),
-      content: z.union([z.string(), z.object({ type: z.string() }).passthrough()]), // Can be string or Tiptap JSON
+      content: z.string(),
       createdAt: z.string().datetime().optional(),
     })
   ),
@@ -69,23 +69,8 @@ export async function POST(req: Request) {
     if (!conversationId) {
       const firstUserMessage = messages.find(m => m.role === 'user');
       
-      const getTitleFromMessage = (content: string | Record<string, unknown>): string => {
-        if (typeof content === 'string') {
-          return content.substring(0, 50);
-        }
-        if (typeof content === 'object' && content !== null && 'content' in content && Array.isArray(content.content)) {
-          // Extract text from Tiptap JSON structure
-          const extractText = (nodes: Array<Record<string, unknown>>): string => {
-            return nodes.map(node => {
-              if (node.type === 'text') return (node.text as string) || '';
-              if (node.content && Array.isArray(node.content)) return extractText(node.content);
-              return '';
-            }).join('');
-          };
-          const text = extractText(content.content as Array<Record<string, unknown>>);
-          return text.substring(0, 50) || 'New Conversation';
-        }
-        return 'New Conversation';
+      const getTitleFromMessage = (content: string): string => {
+        return content.substring(0, 50) || 'New Conversation';
       }
 
       const [provider] = model.split(':');
@@ -129,9 +114,9 @@ export async function POST(req: Request) {
 
     // --- Enhanced Mention Processing Logic ---
     let mentionedContent = '';
-    if (typeof lastUserMessage.content === 'string' || (typeof lastUserMessage.content === 'object' && lastUserMessage.content !== null)) {
+    if (lastUserMessage.content) {
       try {
-        mentionedContent = await extractMentionContexts(lastUserMessage.content as string | Record<string, unknown>, userId);
+        mentionedContent = await extractMentionContexts(lastUserMessage.content, userId);
       } catch (error) {
         console.warn('Failed to extract mention contexts:', error);
         mentionedContent = '';
@@ -159,27 +144,7 @@ export async function POST(req: Request) {
     const result = await streamText({
       model: modelInstance,
       system: systemPrompt,
-      messages: messages.map(m => {
-        let contentText = '';
-        if (typeof m.content === 'string') {
-          try {
-            const parsed = JSON.parse(m.content);
-            if (parsed.type === 'doc' && Array.isArray(parsed.content)) {
-              contentText = parsed.content.map((node: { content?: { text: string }[] }) =>
-                node.content?.map((leaf) => leaf.text).join('') || ''
-              ).join('\n');
-            } else {
-              contentText = m.content;
-            }
-          } catch {
-            contentText = m.content;
-          }
-        } else {
-          // Fallback for non-string content
-          contentText = 'Unsupported content type';
-        }
-        return {...m, content: contentText};
-      }) as CoreMessage[],
+      messages: messages as CoreMessage[],
       onFinish: async ({ text, toolCalls, toolResults }) => {
         // Use transaction to ensure both messages are saved atomically
         await db.transaction(async (tx) => {
@@ -187,7 +152,7 @@ export async function POST(req: Request) {
             {
               conversationId: conversationId!,
               role: 'user',
-              content: typeof lastUserMessage.content === 'string' ? lastUserMessage.content : JSON.stringify(lastUserMessage.content),
+              content: lastUserMessage.content,
               isActive: true,
               createdAt: new Date(),
             },

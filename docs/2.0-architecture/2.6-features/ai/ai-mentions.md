@@ -179,15 +179,11 @@ const permissionPrecedence = ['VIEW', 'EDIT', 'SHARE', 'DELETE'];
 ### Frontend Components
 
 ```
-TiptapChatInput
-├── TiptapToolbar (optional)
+RichlineEditor
 ├── Enhanced Mention Node (with type/data)
 ├── Polymorphic MentionComponent
 ├── Unified Search Integration
 └── Type-aware Suggestion Store
-
-TiptapRenderer
-└── Renders Tiptap JSON content
 ```
 
 ### Backend APIs
@@ -200,13 +196,11 @@ TiptapRenderer
 └── Drive/context scoping
 
 /api/ai/*/chat (enhanced)
-├── Tiptap JSON content support
 ├── Type-aware mention processing
 ├── Context injection with permissions
 └── Content security validation
 
 /api/channels/[pageId]/messages
-└── Now accepts and stores Tiptap JSON content
 ```
 
 ### Database Schema
@@ -238,10 +232,9 @@ mentions_enhanced (
 
 The enhanced mention system has been fully implemented across all chat interfaces, including Page-AI, Assistant-AI, and Channels. The core features are complete and operational.
 
-- **Unified Input**: All chat inputs now use the `TiptapChatInput` component, providing a consistent user experience with rich text, mentions, and formatting.
-- **Rich Content Rendering**: Messages are correctly rendered using the `TiptapRenderer`, ensuring that mentions and formatting are displayed properly.
+- **Unified Input**: All chat inputs now use the `RichlineEditor` component, providing a consistent user experience with rich text, mentions, and formatting.
+- **Rich Content Rendering**: Messages are correctly rendered, ensuring that mentions and formatting are displayed properly.
 - **Multi-Type Support**: The system supports mentions for pages, users, AI chats, AI assistant conversations, and channels.
-- **Future Work**: The legacy mention system will be deprecated and removed once all content has been migrated to the new Tiptap-based format.
 
 This architecture provides a flexible, secure, and scalable mention system that respects the unique permission models of each communication system while enabling rich context sharing where appropriate.
 

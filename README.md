@@ -101,7 +101,7 @@ graph TB
     DB --> PG
 ```
 
-- **Frontend:** Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui, Tiptap
+- **Frontend:** Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui
 - **Backend:** Next.js API Routes, Socket.io Realtime Server
 - **Database:** PostgreSQL via Drizzle ORM
 - **AI:** AI models orchestrated by the Vercel AI SDK

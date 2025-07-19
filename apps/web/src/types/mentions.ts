@@ -93,10 +93,3 @@ export interface MentionSuggestion {
   description?: string; // Optional description for search results
 }
 
-// For Tiptap node attributes
-export interface TiptapMentionAttributes {
-  id: string;
-  label: string;
-  type: MentionType;
-  data: MentionData;
-}

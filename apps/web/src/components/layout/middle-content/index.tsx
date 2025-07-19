@@ -6,14 +6,13 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import Editor from '@/components/layout/middle-content/page-views/document/Editor';
 import { ViewHeader } from './content-header';
 import { usePageTree } from '@/hooks/usePageTree';
 import { findNodeAndParent } from '@/lib/tree-utils';
 import FolderView from './page-views/folder/FolderView';
 import AiChatView from './page-views/ai-page/AiChatView';
 import ChannelView from './page-views/ai-page/ChannelView';
-import NoteView from './page-views/note/NoteView';
+import DocumentView from './page-views/document/DocumentView';
 import { CustomScrollArea } from '@/components/ui/custom-scroll-area';
 import { PageType } from '@pagespace/lib';
 import AiSettingsView from './page-views/settings/AiSettingsView';
@@ -79,16 +78,14 @@ const PageContent = ({ pageId }: { pageId: string | null }) => {
   const { node: page } = pageResult;
 
   switch (page.type) {
-    case PageType.DOCUMENT:
-      return <Editor key={page.id} page={page} />;
     case PageType.FOLDER:
       return <FolderView key={page.id} page={page} />;
     case PageType.AI_CHAT:
       return <AiChatView key={page.id} page={page} />;
     case PageType.CHANNEL:
       return <ChannelView key={page.id} page={page} />;
-    case PageType.NOTE:
-      return <NoteView key={page.id} page={page} />;
+    case PageType.DOCUMENT:
+      return <DocumentView key={page.id} page={page} />;
     case PageType.DATABASE:
         return <div className="p-4">This page type is deprecated.</div>;
     default:

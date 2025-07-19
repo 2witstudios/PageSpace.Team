@@ -13,7 +13,7 @@ class MentionSystem {
     if (query !== null) {
       const rect = this.getCursorRect(element, cursorPos);
       useSuggestionStore.getState().open(
-        null, // We'll pass the editor instance later from the adapter
+        null,
         { top: rect.bottom, left: rect.left },
         query,
         (suggestion) => this.insert(element, suggestion),
@@ -55,14 +55,14 @@ class MentionSystem {
     }
   }
 
-  public insert(element: HTMLElement, suggestion: MentionSuggestion) {
+  public insert(_element: HTMLElement, suggestion: MentionSuggestion) {
     // This is a placeholder. The actual insertion logic will be
     // handled by the adapter for each specific input type.
     console.log(`Inserting mention: ${suggestion.label} (${suggestion.id}) of type ${suggestion.type}`);
     useSuggestionStore.getState().close();
   }
 
-  private findQuery(text: string, cursorPos: number): string | null {
+  public findQuery(text: string, cursorPos: number): string | null {
     const textBeforeCursor = text.slice(0, cursorPos);
     const triggerIndex = textBeforeCursor.lastIndexOf(this.triggerChar);
 
@@ -78,7 +78,7 @@ class MentionSystem {
     return query;
   }
 
-  private getCursorRect(element: HTMLElement, cursorPos: number): DOMRect {
+  public getCursorRect(element: HTMLElement, cursorPos: number): DOMRect {
     const range = document.createRange();
     const textNode = element.firstChild;
     if (textNode && cursorPos <= textNode.textContent!.length) {

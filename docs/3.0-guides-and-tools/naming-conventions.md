@@ -8,7 +8,7 @@
 - `/content-header/` not `/contentHeader/`
 
 #### 2. PascalCase for Components
-- `TiptapChatInput.tsx`
+- `RichlineEditor.tsx`
 - `MessagePartRenderer.tsx`
 - `AiChatView.tsx`
 
@@ -16,5 +16,5 @@
 Names should clearly indicate purpose and scope:
 - ✅ `AiChatView.tsx` - AI-specific chat interface
 - ✅ `ChannelView.tsx` - People-to-people channel interface
-- ✅ `TiptapRenderer.tsx` - Rich text display component
+- ✅ `RichlineEditor.tsx` - Rich text display component
 - ❌ `ChatView.tsx` - Ambiguous chat type

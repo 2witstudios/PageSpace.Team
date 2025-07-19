@@ -10,7 +10,7 @@
 ├── layout/                 # Main structural application layout
 ├── messages/               # Universal message handling & input
 ├── mentions/               # Entity mention system components
-├── rich-text/              # Rich text editing & rendering (Tiptap)
+├── rich-text/              # Rich text editing & rendering
 ├── dialogs/                # Custom application-specific dialogs
 └── ...feature-specific/    # Other feature-based directories
 ```
@@ -29,7 +29,6 @@ Directory names reflect **what they're used for**, not how they're built:
 - ✅ `/rich-text/` - Used for rich text across documents, messages, forms
 - ✅ `/messages/` - Handles messaging across AI chats, channels, DMs
 - ✅ `/mentions/` - Manages entity mentions across all contexts
-- ❌ `/tiptap/` - Implementation-specific, not usage-descriptive
 - ❌ `/chat/` - Ambiguous, conflicts with API terminology
 
 #### 3. Framework vs Application Separation

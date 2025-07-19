@@ -3,27 +3,23 @@ import { pages, mentions, aiChats, chatMessages, db, and, eq, inArray } from '@p
 import { decodeToken, getUserAccessLevel } from '@pagespace/lib';
 import { parse } from 'cookie';
 import { z } from "zod";
-import type { JSONContent } from '@tiptap/core';
 
 type DatabaseType = typeof db;
 type TransactionType = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
-// Helper function to find mention nodes in Tiptap content
-function findMentionNodes(node: JSONContent): string[] {
-  let pageIds: string[] = [];
-  if (node.type === 'mention' && node.attrs?.id) {
-    pageIds.push(node.attrs.id);
+function findMentionNodes(content: unknown): string[] {
+  const ids: string[] = [];
+  const regex = /@\[.*?\]\((.*?)\)/g;
+  let match;
+  const contentStr = Array.isArray(content) ? content.join('\n') : String(content);
+  while ((match = regex.exec(contentStr)) !== null) {
+    ids.push(match[1]);
   }
-  if (node.content) {
-    for (const child of node.content) {
-      pageIds = pageIds.concat(findMentionNodes(child));
-    }
-  }
-  return pageIds;
+  return ids;
 }
 
 // Helper function to sync mentions
-async function syncMentions(sourcePageId: string, content: JSONContent, tx: TransactionType | DatabaseType) {
+async function syncMentions(sourcePageId: string, content: unknown, tx: TransactionType | DatabaseType) {
   const mentionedPageIds = findMentionNodes(content);
 
   const existingMentionsQuery = await tx.select({ targetPageId: mentions.targetPageId }).from(mentions).where(eq(mentions.sourcePageId, sourcePageId));

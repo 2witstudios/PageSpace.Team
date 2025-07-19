@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState, memo, useMemo, useCallback } from 'react';
 import { RichlineCore } from './rust-bridge';
-import { Line, LinesInput, normalizeLines, linesToStrings, isLineArray } from './types';
+import { LinesInput, normalizeLines, linesToStrings, isLineArray } from './types';
 import './RichlineEditor.css';
 
 export interface RichlineEditorProps {
@@ -8,13 +8,16 @@ export interface RichlineEditorProps {
   onChange: (lines: LinesInput) => void;
   maxCharsPerLine?: number; // default: 80
   zoomLevel?: number; // default: 1.0
+  showLineNumbers?: boolean; // default: false
   onLineHighlight?: (lineIndex: number) => void;
+  onMention?: (lineIndex: number, element: HTMLElement) => void;
   className?: string;
   disabled?: boolean;
   placeholder?: string;
 }
 
 export interface RichlineEditorRef {
+  replaceText: (lineIndex: number, start: number, end: number, text: string) => void;
   replaceLines: (startIndex: number, endIndex: number, newLines: LinesInput) => void;
   highlightLines: (indices: number[]) => void;
   scrollToLine: (index: number) => void;
@@ -77,9 +80,11 @@ const RichlineEditor = forwardRef<RichlineEditorRef, RichlineEditorProps>(
       onChange,
       maxCharsPerLine = 80,
       zoomLevel = 1.0,
+      showLineNumbers = false,
       className = '',
       disabled = false,
-      placeholder = '',
+      placeholder: _placeholder = '',
+      onMention,
     },
     ref
   ) => {
@@ -119,13 +124,24 @@ const RichlineEditor = forwardRef<RichlineEditorRef, RichlineEditorProps>(
     }, [nextFocus]);
 
     useImperativeHandle(ref, () => ({
+      replaceText: (lineIndex, start, end, text) => {
+        const line = normalizeLines(currentLines)[lineIndex];
+        if (line) {
+          const newText = line.text.substring(0, start) + text + line.text.substring(end);
+          core.replaceLines(lineIndex, lineIndex + 1, [newText]);
+          const updatedLines = core.getLines();
+          setCurrentLines(updatedLines);
+          callOnChange(updatedLines);
+          setNextFocus({ index: lineIndex, position: start + text.length });
+        }
+      },
       replaceLines: (startIndex, endIndex, newLines) => {
         core.replaceLines(startIndex, endIndex, newLines);
         const updatedLines = core.getLines();
         setCurrentLines(updatedLines);
         callOnChange(updatedLines);
       },
-      highlightLines: (indices) => {
+      highlightLines: (_indices) => {
         // TODO: Implement highlighting logic
       },
       scrollToLine: (index) => {
@@ -221,26 +237,64 @@ const RichlineEditor = forwardRef<RichlineEditorRef, RichlineEditorProps>(
       } else if (e.key === 'ArrowDown' && index < normalizeLines(currentLines).length - 1) {
         e.preventDefault();
         lineRefs.current[index + 1]?.focus();
+      } else if (e.key === '@') {
+        if (onMention) {
+          onMention(index, e.currentTarget as HTMLElement);
+        }
       }
-    }, [core, callOnChange, currentLines]);
+    }, [core, callOnChange, currentLines, onMention]);
+
+    const normalizedLines = normalizeLines(currentLines);
 
     return (
       <div
         ref={editorRef}
-        className={`richline-editor ${className}`}
-        style={{ transform: `scale(${zoomLevel})` }}
+        className={`richline-editor ${showLineNumbers ? 'with-line-numbers' : ''} ${className}`}
+        style={{ 
+          fontSize: `${12 * zoomLevel}pt`,
+          lineHeight: 1.5,
+          padding: `${1 * zoomLevel}in`,
+          width: `${8.5 * zoomLevel}in`,
+          minHeight: `${11 * zoomLevel}in`,
+          borderWidth: `${Math.max(1, zoomLevel)}px`,
+          boxShadow: `0 0 ${10 * zoomLevel}px rgba(0, 0, 0, 0.1)`,
+          maxWidth: `min(${8.5 * zoomLevel}in, calc(100vw - 2rem))`,
+          display: showLineNumbers ? 'flex' : 'block'
+        }}
       >
-        {normalizeLines(currentLines).map((line, index) => (
-          <LineComponent
-            key={line.id || index}
-            index={index}
-            line={line.text}
-            disabled={disabled}
-            onLineChange={handleLineChange}
-            onKeyDown={handleKeyDown}
-            setRef={(el) => (lineRefs.current[index] = el)}
-          />
-        ))}
+        {showLineNumbers && (
+          <div 
+            className="richline-line-numbers"
+            style={{ 
+              fontSize: `${12 * zoomLevel}pt`,
+              width: `${3 * zoomLevel}em`,
+              paddingRight: `${0.5 * zoomLevel}em`,
+              marginRight: `${1 * zoomLevel}em`
+            }}
+          >
+            {normalizedLines.map((_, index) => (
+              <div key={index} className="line-number">
+                {index + 1}
+              </div>
+            ))}
+          </div>
+        )}
+        <div 
+          className={showLineNumbers ? "richline-content" : ""}
+          style={showLineNumbers ? { paddingRight: `${1 * zoomLevel}in` } : {}}
+        >
+          {normalizedLines.map((line, index) => (
+            <LineComponent
+              key={line.id || index}
+              index={index}
+              line={line.text}
+              disabled={disabled}
+              onLineChange={handleLineChange}
+              onKeyDown={handleKeyDown}
+              setRef={(el) => (lineRefs.current[index] = el)}
+            />
+          ))}
+        </div>
       </div>
     );
   }

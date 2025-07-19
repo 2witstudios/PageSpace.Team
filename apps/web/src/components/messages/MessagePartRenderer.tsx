@@ -1,5 +1,4 @@
 import React from 'react';
-import TiptapRenderer from '@/components/rich-text/TiptapRenderer';
 
 // Define the structure for message parts
 export interface MessagePart {
@@ -18,13 +17,17 @@ interface MessagePartRendererProps {
   context?: 'message';
 }
 
-const MessagePartRenderer: React.FC<MessagePartRendererProps> = ({ part, index, context }) => {
+const MessagePartRenderer: React.FC<MessagePartRendererProps> = ({ part, index }) => {
   switch (part.type) {
     case 'text':
       return <span key={index}>{part.text}</span>;
     
     case 'rich-text':
-      return <TiptapRenderer key={index} content={part.content || ''} context={context} />;
+      // For now, render rich-text as plain text since we removed Tiptap
+      const textContent = typeof part.content === 'string' 
+        ? part.content 
+        : JSON.stringify(part.content, null, 2);
+      return <div key={index} className="whitespace-pre-wrap">{textContent}</div>;
     
     case 'tool-invocation':
       return (

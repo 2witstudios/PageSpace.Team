@@ -1,4 +1,4 @@
-import { streamText, CoreMessage, tool } from 'ai';
+import { streamText, tool } from 'ai';
 import { db, and, eq, gte } from '@pagespace/db';
 import { pages, chatMessages, aiChats } from '@pagespace/db';
 import { z } from 'zod';
@@ -13,7 +13,7 @@ const postSchema = z.object({
   messages: z.array(
     z.object({
       role: z.enum(['user', 'assistant']),
-      content: z.union([z.string(), z.object({ type: z.string() }).passthrough()]), // Can be string or Tiptap JSON
+      content: z.string(),
       createdAt: z.string().datetime().optional(),
     })
   ),
@@ -45,7 +45,7 @@ export async function POST(
     const userId = decoded.userId;
 
     const body = await req.json();
-    const { messages, isEdit, editedMessageCreatedAt, isRegenerate, regeneratedMessageCreatedAt } = postSchema.parse(body) as { messages: CoreMessage[], isEdit?: boolean, editedMessageCreatedAt?: string, isRegenerate?: boolean, regeneratedMessageCreatedAt?: string };
+    const { messages, isEdit, editedMessageCreatedAt, isRegenerate, regeneratedMessageCreatedAt } = postSchema.parse(body);
 
     // Manual permission check inspired by withPageAuth
     const accessLevel = await getUserAccessLevel(userId, pageId);
@@ -89,9 +89,9 @@ export async function POST(
 
     // --- Enhanced Mention Processing Logic ---
     let mentionedContent = '';
-    if (typeof lastUserMessage.content === 'string' || (typeof lastUserMessage.content === 'object' && lastUserMessage.content !== null)) {
+    if (lastUserMessage.content) {
       try {
-        mentionedContent = await extractMentionContexts(lastUserMessage.content as string | Record<string, unknown>, userId);
+        mentionedContent = await extractMentionContexts(lastUserMessage.content, userId);
       } catch (error) {
         console.warn('Failed to extract mention contexts:', error);
         mentionedContent = '';
@@ -124,7 +124,7 @@ export async function POST(
     const result = await streamText({
       model: modelProvider,
       system: enhancedSystemPrompt,
-      messages: messages.map(m => ({...m, content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content)})) as CoreMessage[],
+      messages: messages,
       temperature: aiChat?.temperature || 0.7,
       tools: {
         getWeather: tool({
@@ -153,7 +153,7 @@ export async function POST(
               pageId,
               userId,
               role: 'user',
-              content: typeof lastUserMessage.content === 'string' ? lastUserMessage.content : JSON.stringify(lastUserMessage.content),
+              content: lastUserMessage.content,
               isActive: true,
               createdAt: new Date(),
           });

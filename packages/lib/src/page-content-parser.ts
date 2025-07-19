@@ -1,10 +1,24 @@
-import type { JSONContent } from '@tiptap/core';
 import type { Page } from './types';
 
-// TODO: Implement a proper Tiptap JSON to plain text converter.
-function convertTiptapJsonToPlainText(jsonContent: JSONContent): string {
-  // This is a temporary placeholder implementation.
-  return JSON.stringify(jsonContent, null, 2);
+type ContentFormat = string[] | string | any;
+
+/**
+ * Converts various content formats to plain text for AI consumption.
+ * Handles: Richline arrays and plain strings.
+ */
+function convertContentToPlainText(content: ContentFormat): string {
+  // Handle Richline format (string array)
+  if (Array.isArray(content)) {
+    return content.join('\n');
+  }
+  
+  // Handle plain string
+  if (typeof content === 'string') {
+    return content;
+  }
+  
+  // Fallback for unknown formats
+  return JSON.stringify(content, null, 2);
 }
 
 /**
@@ -22,7 +36,7 @@ export function getPageContentForAI(page: Page & { channelMessages?: any[], chil
     switch (page.type) {
         case 'DOCUMENT':
             if (page.content) {
-                contentString += convertTiptapJsonToPlainText(page.content as JSONContent);
+                contentString += convertContentToPlainText(page.content);
             } else {
                 contentString += "No document content available.\n";
             }

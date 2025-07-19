@@ -19,6 +19,6 @@ export * from './src/utils';           // General-purpose helpers
 - General-purpose utility functions
 
 ### Dependency Philosophy:
-- Minimal external dependencies (jose for JWT, @tiptap/core for types)
+- Minimal external dependencies (jose for JWT)
 - No framework-specific code (works in both Next.js and Socket.IO contexts)
 - Pure TypeScript/JavaScript utilities

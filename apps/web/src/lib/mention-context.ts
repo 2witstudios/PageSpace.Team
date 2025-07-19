@@ -3,18 +3,6 @@ import { pages, chatMessages, assistantMessages, assistantConversations, channel
 import { getUserAccessLevel, getPageContentForAI } from '@pagespace/lib';
 import type { Page } from '@pagespace/lib';
 
-interface TiptapNode {
-  type: string;
-  attrs?: {
-    id?: string;
-    label?: string;
-    type?: string;
-    data?: Record<string, unknown>;
-  };
-  content?: TiptapNode[];
-  text?: string;
-}
-
 interface MentionContext {
   id: string;
   type: string;
@@ -23,7 +11,7 @@ interface MentionContext {
 }
 
 export async function extractMentionContexts(
-  content: string | Record<string, unknown>,
+  content: string | string[],
   userId: string
 ): Promise<string> {
   const mentionContexts: MentionContext[] = [];
@@ -61,34 +49,22 @@ export async function extractMentionContexts(
   }).join('\n\n');
 }
 
-function extractMentions(content: string | Record<string, unknown>): Array<{id: string, type: string, label: string, data?: Record<string, unknown>}> {
-  if (typeof content === 'string') {
-    try {
-      const parsed = JSON.parse(content);
-      return extractMentionsFromNode(parsed as TiptapNode);
-    } catch {
-      return [];
-    }
-  }
-  
-  return extractMentionsFromNode(content as unknown as TiptapNode);
-}
-
-function extractMentionsFromNode(node: TiptapNode): Array<{id: string, type: string, label: string, data?: Record<string, unknown>}> {
+function extractMentions(content: string | string[]): Array<{id: string, type: string, label: string, data?: Record<string, unknown>}> {
   const mentions: Array<{id: string, type: string, label: string, data?: Record<string, unknown>}> = [];
+  const mentionRegex = /@\[([^\]]+)\]\(([^)]+)\)/g;
   
-  if (node.type === 'mention' && node.attrs?.id) {
-    mentions.push({
-      id: node.attrs.id,
-      type: node.attrs.type || 'page',
-      label: node.attrs.label || 'Unknown',
-      data: node.attrs.data
-    });
-  }
+  const lines = Array.isArray(content) ? content : [content];
   
-  if (node.content && Array.isArray(node.content)) {
-    for (const childNode of node.content) {
-      mentions.push(...extractMentionsFromNode(childNode));
+  for (const line of lines) {
+    if (typeof line === 'string') {
+      let match;
+      while ((match = mentionRegex.exec(line)) !== null) {
+        mentions.push({
+          id: match[2],
+          type: 'page', // Default type
+          label: match[1],
+        });
+      }
     }
   }
   

@@ -37,7 +37,15 @@ const SuggestionPopup = () => {
       className="fixed bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50"
       style={{ top: position.top, left: position.left, width: position.width, transform: 'translateY(-100%)' }}
     >
-      <SuggestionList ref={listRef} items={items} command={command} />
+      <SuggestionList
+        ref={listRef}
+        items={items}
+        command={(suggestion) => {
+          if (command) {
+            command(suggestion);
+          }
+        }}
+      />
     </div>
   );
 };

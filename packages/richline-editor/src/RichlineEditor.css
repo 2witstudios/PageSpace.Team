@@ -2,15 +2,10 @@
   border: 1px solid #ddd;
   background-color: #fff;
   color: #000;
-  width: 8.5in; /* Standard paper width */
-  min-height: 11in; /* Standard paper height */
-  padding: 1in;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  transform-origin: top left;
+  margin: 0 auto; /* Center the editor */
   font-family: 'Times New Roman', Times, serif;
-  font-size: 12pt;
-  line-height: 1.5;
   box-sizing: border-box;
+  /* width, height, font-size, line-height, padding, border-width, and box-shadow are now controlled by zoomLevel prop */
 }
 
 .richline-line {
@@ -22,3 +17,35 @@
 .richline-editor:focus-within {
   border-color: #007bff;
 }
+
+/* Line numbers styles */
+.richline-line-numbers {
+  flex-shrink: 0;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+  text-align: right;
+  color: #6c757d;
+  font-family: 'Courier New', monospace;
+  user-select: none;
+  line-height: 1.5;
+  /* width, padding-right, and margin-right are now controlled by zoomLevel prop */
+}
+
+.line-number {
+  min-height: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.richline-content {
+  flex: 1;
+  min-width: 0; /* Allow content to shrink */
+}
+
+/* Adjust padding when line numbers are shown */
+.richline-editor.with-line-numbers {
+  padding-left: 0;
+}
+
+/* padding-right for richline-content is now handled inline via style prop to support zoom scaling */

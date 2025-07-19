@@ -11,7 +11,7 @@ PageSpace is a local-first, AI-powered knowledge base for document-centric teams
 ### Frontend
 - **Framework:** Next.js 15 App Router
 - **UI:** Tailwind + shadcn/ui
-- **Editor:** Tiptap with mention + collaboration
+- **Editor:** Richline Editor
 - **Layout:** Three-column (Nav / Content / AI Assistant)
 
 ### Backend (API Routes)
@@ -37,7 +37,7 @@ PageSpace is a local-first, AI-powered knowledge base for document-centric teams
 - **API Endpoints:** `apps/web/src/app/api/`
 - **AI Page:** `components/layout/middle-content/page-views/ai-page/`
 - **Message Rendering:** `components/messages/MessagePartRenderer.tsx`
-- **Tiptap:** `components/rich-text/TiptapRenderer.tsx`
+- **Richline Editor:** `packages/richline-editor/`
 - **DB Schema:** `packages/db/src/schema.ts`
 - **Shared Types:** `packages/lib/src/types/`
 

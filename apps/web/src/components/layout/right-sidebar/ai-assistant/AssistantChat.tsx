@@ -1,8 +1,6 @@
 'use client';
 
-import { JSONContent } from '@tiptap/react';
 import { Message, UseChatHelpers } from 'ai/react';
-import TiptapChatInput from '@/components/messages/TiptapChatInput';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useAssistantStore } from '@/stores/useAssistantStore';
@@ -32,7 +30,7 @@ export default function AssistantChat({ chat }: AssistantChatProps) {
   const page = pageResult?.node;
   const { activeConversationId } = useAssistantStore();
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-  const [editedContent, setEditedContent] = useState<string | JSONContent>('');
+  const [editedContent, setEditedContent] = useState<string>('');
 
   const {
     messages,
@@ -40,16 +38,6 @@ export default function AssistantChat({ chat }: AssistantChatProps) {
     setMessages,
   } = chat;
 
-  const handleTiptapSubmit = (content: JSONContent | string) => {
-    if (!page || !currentDrive) {
-      toast.error('Cannot send message without a page or drive context.');
-      return;
-    }
-    chat.append({
-      role: 'user',
-      content: typeof content === 'string' ? content : JSON.stringify(content),
-    });
-  };
 
   const handleEditClick = (message: Message) => {
     setEditingMessageId(message.id);
@@ -179,13 +167,10 @@ export default function AssistantChat({ chat }: AssistantChatProps) {
                     </div>
                     {isEditing ? (
                       <div className="flex flex-col gap-2 mt-1">
-                        <TiptapChatInput
-                          onSubmit={(newContent) => {
-                            setEditedContent(newContent);
-                            handleSaveEdit();
-                          }}
-                          placeholder="Edit your message..."
-                          autoFocus
+                        <textarea
+                          value={editedContent}
+                          onChange={(e) => setEditedContent(e.target.value)}
+                          className="w-full p-2 border rounded"
                         />
                         <div className="flex justify-end gap-2">
                           <Button
@@ -294,11 +279,11 @@ export default function AssistantChat({ chat }: AssistantChatProps) {
           >
             <PlusSquare className="h-5 w-5" />
           </Button>
-          <TiptapChatInput
-            onSubmit={handleTiptapSubmit}
+          <textarea
+            value={chat.input}
+            onChange={chat.handleInputChange}
             placeholder="Ask the AI..."
-            autoFocus
-            className="flex-1"
+            className="flex-1 w-full p-2 border rounded"
           />
         </div>
       </div>

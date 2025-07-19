@@ -6,8 +6,6 @@ import { io, Socket } from 'socket.io-client';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TreePage, MessageWithUser } from '@/hooks/usePageTree';
-import TiptapChatInput from '@/components/messages/TiptapChatInput';
-import { JSONContent } from '@tiptap/react';
 import { renderMessageParts, convertToMessageParts } from '@/components/messages/MessagePartRenderer';
 
 interface ChannelViewProps {
@@ -68,7 +66,7 @@ export default function ChannelView({ page }: ChannelViewProps) {
     }
   }, [messages]);
 
-  const handleSubmit = async (content: JSONContent | string) => {
+  const handleSubmit = async (content: string) => {
     if (!user) return;
 
     const messageContent = typeof content === 'string' ? content : JSON.stringify(content);
@@ -144,12 +142,16 @@ export default function ChannelView({ page }: ChannelViewProps) {
             </ScrollArea>
         </div>
         <div className="p-4 border-t">
-            <TiptapChatInput
-              onSubmit={handleSubmit}
+            <textarea
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e.currentTarget.value);
+                  e.currentTarget.value = '';
+                }
+              }}
               placeholder="Type your message... (use @ to mention)"
-              allowedMentionTypes={['page', 'user', 'channel']}
-              autoFocus
-              showToolbar
+              className="w-full p-2 border rounded"
             />
         </div>
     </div>

@@ -11,7 +11,6 @@ import { Edit2, Copy, RefreshCw, Settings } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import useSWR from 'swr';
 import { Skeleton } from '@/components/ui/skeleton';
-import TiptapChatInput from '@/components/messages/TiptapChatInput';
 import { renderMessageParts, convertToMessageParts, MessagePart } from '@/components/messages/MessagePartRenderer';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useRouter } from 'next/navigation';
@@ -46,7 +45,15 @@ function ChatInterface({ page: initialPage }: { page: DetailedPage }) {
     return new Map((initialPage.messages || []).map((msg: MessageWithUser) => [msg.id, msg.user]));
   }, [initialPage.messages]);
 
-  const { messages, setMessages, reload, append } =
+  const {
+    messages,
+    input,
+    handleInputChange,
+    handleSubmit,
+    setMessages,
+    reload,
+    isLoading,
+  } =
     useChat({
       api: `/api/ai/ai-page/messages/${initialPage.id}`,
       initialMessages: (initialPage.messages || []).map((m: MessageWithUser) => ({
@@ -326,29 +333,51 @@ function ChatInterface({ page: initialPage }: { page: DetailedPage }) {
         </ScrollArea>
       </div>
       <div className="p-4 border-t">
-        <TiptapChatInput
-          onSubmit={(content) => {
-            if (!model) {
-                setApiKeyError('No model configured for this chat. Please select a model in settings.');
-                toast.error('No model configured', {
+        <div className="flex gap-2">
+          <Textarea
+            value={input}
+            onChange={handleInputChange}
+            placeholder="Type your message... (use @ to mention)"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!model) {
+                  setApiKeyError('No model configured for this chat. Please select a model in settings.');
+                  toast.error('No model configured', {
                     description: 'Click here to go to settings',
                     action: {
-                        label: 'Settings',
-                        onClick: () => router.push('/dashboard/settings'),
+                      label: 'Settings',
+                      onClick: () => router.push('/dashboard/settings'),
                     },
+                  });
+                  return;
+                }
+                handleSubmit(e);
+              }
+            }}
+            autoFocus
+            className="flex-1"
+          />
+          <Button
+            onClick={(e) => {
+              if (!model) {
+                setApiKeyError('No model configured for this chat. Please select a model in settings.');
+                toast.error('No model configured', {
+                  description: 'Click here to go to settings',
+                  action: {
+                    label: 'Settings',
+                    onClick: () => router.push('/dashboard/settings'),
+                  },
                 });
                 return;
-            }
-            append({
-              role: 'user',
-              content: typeof content === 'string' ? content : JSON.stringify(content),
-            });
-          }}
-          placeholder="Type your message... (use @ to mention)"
-          allowedMentionTypes={['page', 'user', 'ai-page', 'ai-assistant']}
-          autoFocus
-          showToolbar
-        />
+              }
+              handleSubmit(e);
+            }}
+            disabled={!input.trim() || isLoading}
+          >
+            Send
+          </Button>
+        </div>
       </div>
     </div>
   );

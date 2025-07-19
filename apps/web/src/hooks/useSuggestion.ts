@@ -1,10 +1,9 @@
 import { create } from 'zustand';
-import { Editor } from '@tiptap/core';
 import { MentionSuggestion, MentionType } from '@/types/mentions';
 
 interface SuggestionState {
   isOpen: boolean;
-  editor: Editor | null;
+  editor: unknown | null;
   position: { top: number; left: number; width?: number } | null;
   query: string;
   items: MentionSuggestion[];
@@ -12,7 +11,7 @@ interface SuggestionState {
   allowedTypes: MentionType[];
   
   open: (
-    editor: Editor | null,
+    editor: unknown | null,
     position: { top: number; left: number; width?: number },
     query: string,
     command: (suggestion: MentionSuggestion) => void,
